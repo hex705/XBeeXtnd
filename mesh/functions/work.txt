@@ -1,0 +1,64 @@
+void sendAtCommand() {
+  nss.println("Sending command to the XBee");
+
+  // send the command
+  xbee.send(requestA);
+
+  // wait up to 5 seconds for the status response
+  if (xbee.readPacket(5000)) {
+    // got a response!
+     
+    // should be an AT command response
+    if (xbee.getResponse().getApiId() == AT_COMMAND_RESPONSE) {
+      xbee.getResponse().getAtCommandResponse(response);
+
+      if (response.isOk()) {
+        nss.print("Command [");
+        nss.print(response.getCommand()[0]);
+        nss.print(response.getCommand()[1]);
+        nss.print(",  ");
+         nss.write(response.getCommand()[0]);
+        nss.write(response.getCommand()[1]);
+        nss.println("] was successful!");
+
+        if (response.getValueLength() > 0) {
+          nss.print("Command value length is ");
+          nss.println(response.getValueLength(), DEC);
+
+          nss.print("Command value: ");
+          
+          for (int i = 0; i < response.getValueLength(); i++) {
+            nss.print(response.getValue()[i], HEX);
+            nss.print(" ");
+          }
+                    nss.println("");
+          for (int i = 0; i < response.getValueLength(); i++) {
+            nss.write(response.getValue()[i]);
+     
+          }
+
+          nss.println("");
+        }
+      } 
+      else {
+        nss.print("Command return error code: ");
+        nss.println(response.getStatus(), HEX);
+      }
+    } else {
+      nss.print("Expected AT response but got ");
+      nss.print(xbee.getResponse().getApiId(), HEX);
+    }   
+  } else {
+    // at command failed
+    if (xbee.getResponse().isError()) {
+      nss.print("Error reading packet.  Error code: ");  
+      nss.println(xbee.getResponse().getErrorCode());
+    } 
+    else {
+      nss.println("No response from radio");  
+    }
+  }
+}
+
+
+
