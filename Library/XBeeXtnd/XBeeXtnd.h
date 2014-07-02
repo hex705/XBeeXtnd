@@ -68,7 +68,7 @@ public:
 	
 	// constructor
 	//void xtCreate( int,int, int, int, int, int  );
-  void xtCreate( XBee &,  LiquidCrystal &  );
+  void xtCreate( XBee &  );
 	// receive methods
 	int  xtListen();
 	
