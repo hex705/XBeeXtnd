@@ -55,15 +55,15 @@ public:
 
 	LinkedList<XBeeAddress64> nodeList; 
 	
-	LiquidCrystal *lcd;
-	
+
 	// storage
 	uint8_t status;
 	uint8_t tempAddress[8];
 	String  zbRxString;
 	String  zbTxString;
 	int timeOut;
-	String state;
+	
+	String debugString;
 	
 	
 	// constructor
@@ -90,20 +90,6 @@ public:
 	int getStatus();
 	
 	
-	
-	/// crystal shit
-	void lcdPrint( String );
-	void lcdPrintln( String );
-	
-	void heartBeat();
-	void clearLine ( int );
-	void clearLine ( int , int );
-	void lcdMessage(char , int );
-	void lcdMessage(char );
-	
-	void lcdMessage( String );
-
-	void lcdMessage( String , int );
 	
 	// utilities
 	void setTimeout( int ) ;

@@ -9,10 +9,10 @@
 
 
 //void XBeeXtnd::xtCreate(int _i1, int _i2, int _d1, int _d2, int _d3, int _d4 )
-void XBeeXtnd::xtCreate(XBee &_xbee, LiquidCrystal &_lcd )
+void XBeeXtnd::xtCreate(XBee &_xbee)
 {
-	state = "";
-	lcd = new LiquidCrystal( _lcd );
+	debugString = "";
+
 	xbee = new XBee( _xbee);
 	timeOut = 5;
 	
@@ -32,8 +32,8 @@ void XBeeXtnd::xtCreate(XBee &_xbee, LiquidCrystal &_lcd )
 	
 	DEBUG_STATE = 0;
 	
-	state = "end create";
-    lcdMessage("end create");
+	debugString = "xt:: end create";
+
 	
 }
 
@@ -94,8 +94,8 @@ int XBeeXtnd::xtListen(){
   int mSize;
   int i=0;
 
-  state = "waiting ";
-  lcdMessage("waiting ...........",0);
+  debugString = "xt::WT ";
+  
 
    // needs a timeout of it blocks
    xbee->readPacket(timeOut); // was 5 
@@ -104,8 +104,8 @@ int XBeeXtnd::xtListen(){
 
     if ( xbee->getResponse().isAvailable() > 0 ) {
       // got something
-		state +=", got a message ";
-		lcdMessage("got a message",0);
+		debugString +=", GM";
+		
 		clearLine(1);
         // if a message go here 
         int API_TYPE = xbee->getResponse().getApiId();
@@ -123,7 +123,8 @@ int XBeeXtnd::xtListen(){
                char c = zbRx.getData(i);
                 zbRxString += c ;
               }
-			lcdMessage("ZB message ",1);
+
+			debugString +=", ZB";
             return ZB; // 1
 
           break;
@@ -131,7 +132,7 @@ int XBeeXtnd::xtListen(){
           case ZB_TX_STATUS_RESPONSE:
             xbee->getResponse().getZBTxStatusResponse(zbSR);
 			status = zbSR.isSuccess();
-		    lcdMessage("TX status ",1);
+			debugString +=", TX";
 			return ZBSR; // 2
           break;
 
@@ -159,12 +160,13 @@ int XBeeXtnd::xtListen(){
 					
                     }
 
+					// have to deal with this next 
                     if (STORE_NODE_ADDRESS) storeAddress();
                
                 }
 
                STORE_NODE_ADDRESS = 0;
-              lcdMessage("AT command response ",1);
+               debugString +=", AT";
               return AT; // 3
             }
 
@@ -175,7 +177,7 @@ int XBeeXtnd::xtListen(){
 	
 
     }  // no data available  
-   lcdMessage("nothing",1);
+   	debugString +=", ND";
    return ERR; // 0
 
 } // end listen
@@ -185,14 +187,13 @@ int XBeeXtnd::xtListen(){
 
 // send 2 chars as ints
 void XBeeXtnd::xtSendAtCommand ( uint8_t first, uint8_t second) {
-	lcdMessage("got two chars", 0);
     uint8_t cmd[] = {first, second};  
     xtSendAtCommand ( cmd ) ;
 }
 
 //AtCommandRequest request = AtCommandRequest(command);
 void XBeeXtnd::xtSendAtCommand ( uint8_t *command ) {
-	   lcdMessage("got char array", 0);
+	  
       AtCommandRequest request = AtCommandRequest(command);
       xtSendAtCommand( request );
       
@@ -201,9 +202,9 @@ void XBeeXtnd::xtSendAtCommand ( uint8_t *command ) {
 
 void XBeeXtnd::xtSendAtCommand ( AtCommandRequest ATCR ) {   
    // send the command
-   lcdMessage("start xbee send", 0);
+
    xbee->send(ATCR);  
-lcdMessage("end  xbee send", 1);
+   debugString ="SD AT";
 }
 
 void XBeeXtnd::xtDebug(int state ) {
@@ -215,58 +216,6 @@ int XBeeXtnd::getStatus(){
 }
 
 
-
-
-// lcd clear line utility function
-
-void XBeeXtnd::clearLine ( int line ) {
-  clearLine(line, 16); // deafult width to clear
-}
-
-void XBeeXtnd::clearLine (int line, int width){
-    lcd->setCursor(0,line);
-    for (int i =0 ; i < width; i ++ ) {
-        lcd->print(" ");
-    }
-    
-    lcd->setCursor(0,line);
-} // end clear line
-
-
-// message utility function
-void XBeeXtnd::lcdMessage(String m) {
-  lcdMessage(m,1); // default write to second line
-}
-
-void XBeeXtnd::lcdMessage(String m, int l) {
-   // LDC messages
-    clearLine(l);
-    lcd->setCursor(0,l); // start of second (1) line 
-    lcd->print(m);
-  
-}
-
-// message utility function
-void XBeeXtnd::lcdMessage(char c) {
-  lcdMessage(c,1); // default write to second line
-}
-
-void XBeeXtnd::lcdMessage(char c, int l) {
-   // LDC messages
-    lcd->print(c);
-  
-}
-
-// used ??
-
-void XBeeXtnd::lcdPrint( String s ){
-	lcd->print(s);
-}
-
-void XBeeXtnd::lcdPrintln(String s) {
-	lcd->println(s);
-
-}
 
 
 
