@@ -90,11 +90,11 @@ void XBeeXtnd::sendZB(XBeeAddress64 dst, String payload) {
 
 int XBeeXtnd::xtListen(){
 	
-  state = "";
+  debugString = "";
   int mSize;
   int i=0;
 
-  debugString = "xt::WT ";
+  debugString = "xt::WT";
   
 
    // needs a timeout of it blocks
@@ -104,9 +104,8 @@ int XBeeXtnd::xtListen(){
 
     if ( xbee->getResponse().isAvailable() > 0 ) {
       // got something
-		debugString +=", GM";
+		debugString +=",GM";
 		
-		clearLine(1);
         // if a message go here 
         int API_TYPE = xbee->getResponse().getApiId();
 
@@ -124,7 +123,7 @@ int XBeeXtnd::xtListen(){
                 zbRxString += c ;
               }
 
-			debugString +=", ZB";
+			debugString +=",ZB";
             return ZB; // 1
 
           break;
@@ -132,7 +131,7 @@ int XBeeXtnd::xtListen(){
           case ZB_TX_STATUS_RESPONSE:
             xbee->getResponse().getZBTxStatusResponse(zbSR);
 			status = zbSR.isSuccess();
-			debugString +=", TX";
+			debugString +=",TX";
 			return ZBSR; // 2
           break;
 
@@ -166,7 +165,7 @@ int XBeeXtnd::xtListen(){
                 }
 
                STORE_NODE_ADDRESS = 0;
-               debugString +=", AT";
+               debugString +=",AT";
               return AT; // 3
             }
 
@@ -177,7 +176,7 @@ int XBeeXtnd::xtListen(){
 	
 
     }  // no data available  
-   	debugString +=", ND";
+   	debugString +=",ND";
    return ERR; // 0
 
 } // end listen
@@ -221,7 +220,7 @@ int XBeeXtnd::getStatus(){
 
 void XBeeXtnd::setTimeout( int to) {
 	timeOut = to;
-	lcdMessage("timeout Set");
+	debugString = "set TO";
 	
 }
 

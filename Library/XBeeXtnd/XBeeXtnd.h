@@ -15,7 +15,7 @@
 #include <WString.h>        // String
 #include <XBee.h>
 #include <LinkedList.h>    //Link: http://github.com/ivanseidel/LinkedList
-#include <LiquidCrystal.h> 
+
 
 
 #define ERR 0
@@ -35,7 +35,6 @@ private:
 	//XBee xbee;
 	XBee *xbee;
 	
-
 	
 	uint8_t DEBUG_STATE;
 	uint8_t STORE_NODE_ADDRESS;
@@ -68,7 +67,7 @@ public:
 	
 	// constructor
 	//void xtCreate( int,int, int, int, int, int  );
-  void xtCreate( XBee &  );
+  void xtCreate( XBee & );
 	// receive methods
 	int  xtListen();
 	
