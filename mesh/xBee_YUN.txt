@@ -1,0 +1,109 @@
+
+the small shield vs debug:
+
+the shiled with xBee connects radio to arduino:
+
+so we must cross the wires --  Rx-Tx (or Ard - Rx to xBee-Dout)
+
+on a ftdi board, softserial Tx goes to Tx on board -- it is pass through becasue translation happens on other side(?).
+
+
+
+notes on xBee and a YUN 
+
+see:
+http://blog.danielkerris.com/?p=364
+
+
+altserial works with a serial converter
+
+
+yun 5 --> USB-serial Tx
+yun 13 -> USB-serial Rx
+
+
+no flow control pins 
+
+
+now 
+
+try to connect this to a radio at 38400 
+
+series 1 radios -- can send a value from arduino t oother radio via shield and alt
+
+jumpers:
+
+DIN = 5
+DOUT  =13
+
+
+for some unknown reason this now wants to work so lets try some more stuff 
+
+
+have to slow the system down a great deal -- at 9600 baud it works with the altsoftware serial librariy from (version 1.2) :
+
+https://www.pjrc.com/teensy/td_libs_AltSoftSerial.html
+
+
+it seems to work well including reset of NI, ND and of basic message reception --  did not send messages over air but since commands work it seems likely that we are OK
+
+
+sendfile:
+from an UNO:
+xBee radio at 9600 on shield on pins 0,1
+
+serial debug on pins 8,9 with softserial
+
+button on pin 4
+
+target radio address set to match target radio (64 bit)
+
+fiie: 
+
+~/Documents/Project Code/XBeeExtended/Mesh/sendTest
+
+
+
+
+on an uno:
+
+files for test (remote radio pointing to the xBee on Yun) with a button for creating ND message request.
+
+
+
+to receive this on an UNO --  LCD on unsual PINS  FTDI--> serial on 8/9 with softSerial. xBee shield xBee radio with target address.
+
+~/Documents/Project Code/XBeeExtended/Mesh/XbXt_test_lcdWorks_passXbee
+
+to receive on YUN :
+
+LCD with pin 5 changes to pin 6 PINS  so instantiate with: 
+LiquidCrystal  lcd(12,11,6,4,3,2);
+
+Console and bridge for debug.
+
+xBee radio and alt serial at 9600 for serial
+xBee shield xBee radio with target address -- Din --> 5,  Dout --> 13
+altsoftserial for comm with radio
+
+file:
+~/Documents/Project Code/XBeeExtended/Mesh/XbXt_test_YUN_ALT_LCD_passXbee
+
+
+
+
+
+IOT book with some basic stuff going on --
+
+loggin to a google doc is done -- need to test embed it in a page 
+
+
+anlso we have a twitter feed runnig
+
+twitter eats space tho 
+
+
+
+
+
+
